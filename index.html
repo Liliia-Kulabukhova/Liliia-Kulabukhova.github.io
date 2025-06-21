@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+
+        <title>MultiStoreyRebuses</title>
+
+        <link type="text/css" rel="stylesheet" href="./style.css">
+
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <link rel="stylesheet"
+              href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0"/>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="int-splash">
+            <header class="int-header">
+                <div class="int-header__content">
+                    <h3 class="int-header__title">
+                        <span>
+                            Оберіть порядок (розмірність) квадрата та рівень складності (легкий, середній, важкий). Потім оберіть тип елементів та створіть квадрат, натиснувши кнопку &quot;Створити&quot;.
+                            Кожен елемент в клітинках таблиці — це одноцифрове число. Знайдіть числове значення кожного елементу, якщо відомо, що сума чисел у кожному рядку дорівнює числу справа, а сума чисел у кожному стовпці — числу знизу.
+                        </span>
+                    </h3>
+                </div>
+
+                <div class="int-header__move">
+                    <button type="button"
+                            tabindex="1"
+                            aria-label="Повноекранний режим"
+                            class="material-symbols-button"
+                            id="fullscreenButton"
+                            onclick="toggleFullScreen()"
+                    >
+                        <i class="material-symbols-rounded" id="fullscreen">fullscreen</i>
+                        <i class="material-symbols-rounded" id="fullscreenExit">fullscreen_exit</i>
+                    </button>
+                </div>
+            </header>
+        </div>
+
+        <main>
+            <section class="puzzle-settings__container puzzle-settings__container-vertical">
+                <section class="puzzle-settings__form" id="radioButtonsSection">
+                    <div class="puzzle-settings__form-container">
+                        <label tabindex="2" onclick="selectImagesType('pixel-pictures')">
+                            <!-- Had to add onclick="event.stopPropagation()" to inputs to prevent double selectImagesType method execution -->
+                            <input type="radio" name="type" value="pixel-pictures" onclick="event.stopPropagation()">
+
+                            <span class="inner"></span>
+
+                            <span>Картинки</span>
+                        </label>
+
+                        <label tabindex="3" onclick="selectImagesType('figures')">
+                            <input type="radio" name="type" value="figures" onclick="event.stopPropagation()">
+
+                            <span class="inner"></span>
+
+                            <span>Фігури</span>
+                        </label>
+
+                        <label tabindex="4" onclick="selectImagesType('ukr-letters')">
+                            <input type="radio" name="type" value="ukr-letters" onclick="event.stopPropagation()">
+
+                            <span class="inner"></span>
+
+                            <span>Укр. літери</span>
+                        </label>
+
+                        <label tabindex="5" onclick="selectImagesType('icons')">
+                            <input type="radio" name="type" value="icons" onclick="event.stopPropagation()">
+
+                            <span class="inner"></span>
+
+                            <span>Значки</span>
+                        </label>
+                    </div>
+
+                    <div class="form-error">
+                        Оберіть тип елементів гри
+                    </div>
+
+                    <button type="button"
+                            class="cta cta-icon cta-secondary toggle-preview-button is--hidden"
+                            onclick="animateImagesPreview()"
+                    >
+                        <i aria-hidden="true" class="material-icons">keyboard_double_arrow_down</i>
+                    </button>
+                </section>
+
+                <section class="pictures__block" id="picturesBlock">
+                    <div class="pictures__container" id="pictures">
+                        <!-- Empty picture to use for preview iteration -->
+                        <img class="pictures__preview is--hidden" id="picturePreview" src="./assets/{type}/img{number}.png" alt="">
+
+                        <!-- Input for ukrainian letters -->
+                        <div class="pictures__input-container" id="ukrLettersInput">
+                            <input class="pictures__input"
+                                   type="text"
+                                   placeholder="Введи 10 різних українських маленьких літер через пробіл або кому"
+                                   onkeyup="updateLetters(event.target)"
+                            >
+
+                            <div class="form-error">
+                                Введіть 10 різних українських маленьких літер через пробіл або кому без повторів
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button"
+                            class="cta cta-icon cta-secondary toggle-preview-button"
+                            onclick="animateImagesPreview()"
+                    >
+                        <i aria-hidden="true" class="material-icons">keyboard_double_arrow_up</i>
+                    </button>
+                </section>
+            </section>
+
+            <section class="puzzle-settings__container">
+                <section id="complexityLevel" class="puzzle-settings__form">
+                    <div class="puzzle-settings__form-container">
+                        <span>Складність:</span>
+
+                        <label tabindex="6" onclick="selectComplexity(1)">
+                            <input type="radio" name="complexity" value="1" onclick="event.stopPropagation()">
+
+                            <span class="inner"></span>
+
+                            <span>Легка</span>
+                        </label>
+
+                        <label tabindex="7" onclick="selectComplexity(2)">
+                            <input type="radio" name="complexity" value="2" onclick="event.stopPropagation()">
+
+                            <span class="inner"></span>
+
+                            <span>Середня</span>
+                        </label>
+
+                        <label tabindex="8" onclick="selectComplexity(3)">
+                            <input type="radio" name="complexity" value="3" onclick="event.stopPropagation()">
+
+                            <span class="inner"></span>
+
+                            <span>Важка</span>
+                        </label>
+                    </div>
+
+                    <div class="form-error">
+                        Оберіть рівень складності
+                    </div>
+                </section>
+
+                <div id="size" class="puzzle-settings__form">
+                    <label class="puzzle-settings__size-label">Порядок:</label>
+
+                    <input class="puzzle-settings__size-control"
+                           id="sizeInput"
+                           name="size"
+                           inputmode="numeric"
+                           min="4"
+                           max="10"
+                           placeholder="5"
+                           onkeyup="changeSize(event.target)"
+                    />
+
+                    <div class="form-error">
+                        Від 4 до 10
+                    </div>
+                </div>
+
+                <button type="button" class="cta cta-primary" id="generate" onclick="generate()">Створити</button>
+            </section>
+
+            <div class="puzzle-board">
+                <div class="puzzle-board__table-layout">
+                    <div class="puzzle-board__table-container">
+                        <div class="puzzle-board__table" id="table">
+                            <div class="puzzle-board__table-cell" id="tableCell">
+                                <img class="puzzle-board__table-cell-image"
+                                     src="./assets/{type}/img{number}.png"
+                                     alt=""
+                                     id="tableCellImage"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="puzzle-board__horizontal-sums" id="horizontalSums">
+                            <div class="puzzle-board__sum-cell" id="horizontalSum">
+                                0
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="puzzle-board__vertical-sums" id="verticalSums">
+                        <div class="puzzle-board__sum-cell" id="verticalSum">
+                            0
+                        </div>
+                    </div>
+                </div>
+
+                <div class="puzzle-board__answers">
+                    <div class="puzzle-board__answers-pictures" id="answersPictures">
+                        <div class="puzzle-board__table-cell" id="answersPicture">
+                            <img class="puzzle-board__table-cell-image"
+                                 src="./assets/{type}/img{number}.png"
+                                 alt=""
+                            >
+                        </div>
+                    </div>
+
+                    <div class="puzzle-board__answers-signs" id="answersSigns">
+                        <div class="puzzle-board__answer-sign" id="answersSign">
+                            &equals;
+                        </div>
+                    </div>
+
+                    <div class="puzzle-board__answers-inputs" id="answersInputs">
+                        <input class="puzzle-board__answer-cell" type="number" id="answersInput">
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="int-footer">
+            <button type="button" aria-label="Спробуйте ще раз" class="cta cta-icon cta-secondary" onclick="restart()">
+                <i aria-hidden="true" class="material-icons">refresh</i>
+            </button>
+
+            <button type="button" class="cta cta-primary" onclick="checkAnswers()" id="check">Перевірити</button>
+        </footer>
+
+        <script type="text/javascript" src="js/base-methods.js"></script>
+
+        <script type="text/javascript" src="js/shared-game-methods.js"></script>
+
+        <script type="text/javascript" src="js/game.js"></script>
+
+        <script type="text/javascript"  src="js/settings.js"></script>
+
+        <script type="text/javascript" src="js/main.js"></script>
+    </body>
+</html>
